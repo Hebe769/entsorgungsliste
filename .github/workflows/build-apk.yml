@@ -1,4 +1,4 @@
-name: APK bauen
+name: APK erstellen
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  bauen:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,14 +20,8 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Android SDK einrichten
-        uses: android-actions/setup-android@v3
-
-      - name: Android SDK 35 installieren
-        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-
       - name: Projekt entpacken
-        run: unzip -q EntsorgungslisteFranken_AndroidProjekt.zip
+        run: unzip -q EntsorgungslisteFranken_AndroidProjekt.zip -d .
 
       - name: Gradle einrichten
         uses: gradle/actions/setup-gradle@v4
@@ -35,7 +29,7 @@ jobs:
           gradle-version: '8.7'
 
       - name: APK bauen
-        run: gradle -p EntsorgungslisteFranken assembleDebug
+        run: gradle -p EntsorgungslisteFranken assembleDebug --stacktrace
 
       - name: APK bereitstellen
         uses: actions/upload-artifact@v4
